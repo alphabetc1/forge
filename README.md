@@ -89,3 +89,7 @@ $forge 请基于 review.md 继续 review
 - Easy to review
 - Easy to revert
 - Hard to skip thinking
+
+## 📄 License
+
+Apache-2.0

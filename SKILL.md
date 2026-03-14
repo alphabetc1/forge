@@ -1,6 +1,7 @@
 ---
 name: forge
 description: Five-stage workflow for coding tasks that progresses across separate invocations by generating `prompt.md`, then `research.md`, then `plan.md`, then implementing from `plan.md`, and finally reviewing the completed implementation into `review.md`. Use when Codex should refine a user's request into staged artifacts, keep each stage reviewable with dedicated git commits, and resume from an explicitly mentioned `prompt.md`, `research.md`, `plan.md`, or `review.md`.
+license: Apache-2.0
 ---
 
 # Forge
