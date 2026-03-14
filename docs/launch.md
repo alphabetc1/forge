@@ -42,7 +42,7 @@ Why I built it:
 - review is easy to forget
 
 What Forge does:
-- forces one stage per invocation
+- runs end to end by default unless you ask it to stop after a stage
 - stores each stage in files you can review
 - keeps the workflow resumable and revertable with git
 - ends with a blocking-issue review loop
@@ -65,7 +65,7 @@ Forge 会把任务强制推进成这 5 个阶段:
 prompt.md -> research.md -> plan.md -> build -> review.md
 
 特点:
-- 一次调用只推进一个阶段
+- 默认一次调用直接跑到完成，除非你明确要求停在某个阶段
 - 每个阶段都落到文件里，便于 review
 - 每个阶段都可以继续和回退
 - 最后必须经过 blocking issue review loop

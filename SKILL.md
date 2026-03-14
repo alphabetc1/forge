@@ -1,6 +1,6 @@
 ---
 name: forge
-description: Five-stage workflow for coding tasks that progresses across separate invocations by generating `prompt.md`, then `research.md`, then `plan.md`, then implementing from `plan.md`, and finally reviewing the completed implementation into `review.md`. Use when Codex should refine a user's request into staged artifacts, keep each stage reviewable with dedicated git commits, and resume from an explicitly mentioned `prompt.md`, `research.md`, `plan.md`, or `review.md`.
+description: Five-stage workflow for coding tasks that starts from a detected stage and, by default, runs through `prompt.md`, `research.md`, `plan.md`, implementation, and `review.md` in one invocation. Use when Codex should refine a user's request into staged artifacts, keep each stage reviewable with dedicated git commits, and resume from an explicitly mentioned `prompt.md`, `research.md`, `plan.md`, or `review.md`.
 license: Apache-2.0
 ---
 
@@ -8,7 +8,7 @@ license: Apache-2.0
 
 ## Overview
 
-Advance the work in exactly one stage per invocation.
+Advance the work from the detected starting stage through stage 5 in one invocation unless the user explicitly asks to stop after a specific stage.
 
 Do not implement code before stage 4.
 
@@ -18,19 +18,27 @@ Create or update all stage files in the current working directory.
 
 ## Detect the Stage
 
-Treat a stage file as the resume signal only when the current user request explicitly includes the literal filename.
+Treat a stage file as the starting-stage resume signal only when the current user request explicitly includes the literal filename.
 
-- If the request does not explicitly mention `prompt.md`, `research.md`, `plan.md`, or `review.md`, run stage 1 only.
-- If the request explicitly mentions `prompt.md`, run stage 2 only.
-- If the request explicitly mentions `research.md`, run stage 3 only.
-- If the request explicitly mentions `plan.md`, run stage 4 only.
-- If the request explicitly mentions `review.md`, run stage 5 only.
+- If the request does not explicitly mention `prompt.md`, `research.md`, `plan.md`, or `review.md`, start at stage 1.
+- If the request explicitly mentions `prompt.md`, start at stage 2.
+- If the request explicitly mentions `research.md`, start at stage 3.
+- If the request explicitly mentions `plan.md`, start at stage 4.
+- If the request explicitly mentions `review.md`, start at stage 5.
+
+After choosing the starting stage, continue through all later stages by default.
+
+If the user explicitly asks to stop after a particular stage, to only generate a specific artifact, or to skip a later stage such as review, honor that narrower stop point.
+
+If the user mentions one stage file as the resume point and a later stage file as the requested stop point or final output, treat that as a valid start-and-stop pair instead of an ambiguity.
 
 If the user explicitly mentions multiple stage filenames and the intended starting point is ambiguous, ask which file should be treated as authoritative before changing anything.
 
 ## Stage Announcement
 
-Before doing any substantive work in an invocation, explicitly announce the active stage in one short line.
+Before starting each substantive stage, explicitly announce the active stage in one short line.
+
+If an invocation runs multiple stages, emit one announcement before each stage begins.
 
 Use this format:
 
@@ -56,7 +64,7 @@ Use these exact stage commit messages:
 - `stage4: implement plan.md`
 - `stage5: review and fix blocking issues`
 
-Create exactly one stage commit after finishing the active stage.
+Create exactly one stage commit after finishing each stage that runs in the invocation.
 
 When the user resumes from an updated upstream artifact, revert stale downstream stage commits before generating the new output. Prefer this helper command while keeping the working directory at the user's repository root:
 
@@ -79,17 +87,19 @@ Commit only the files relevant to the current stage and any revert commits creat
 
 ## Stage 1
 
-Run stage 1 when the user invokes this skill without explicitly naming any stage file.
+Run stage 1 when the detected starting stage is stage 1.
 
 Parse the user's request and rewrite it into a stronger model-ready brief saved as `prompt.md`.
 
 Make `prompt.md` concrete and implementation-oriented. Include the user goal, relevant background, explicit requirements, constraints, expected deliverables, validation expectations, and any important assumptions that later stages must carry forward.
 
-After writing `prompt.md`, create the commit `stage1: generate prompt.md` and stop. Do not create `research.md`, do not create `plan.md`, and do not implement code in this invocation.
+After writing `prompt.md`, create the commit `stage1: generate prompt.md`.
+
+Continue to stage 2 unless the user explicitly asked to stop after stage 1 or after generating `prompt.md`.
 
 ## Stage 2
 
-Run stage 2 only when the user explicitly mentions `prompt.md`.
+Run stage 2 when the detected starting stage is stage 2 or when stage 1 just completed and the workflow is continuing.
 
 Require `prompt.md` to exist. If it is missing, say so and stop.
 
@@ -103,11 +113,13 @@ Use `prompt.md` as the primary brief for repository research. Generate `research
 
 Keep `research.md` concise, decision-oriented, and grounded in the actual repository state.
 
-After writing `research.md`, create the commit `stage2: generate research.md` and stop. Do not create `plan.md`, and do not implement code in this invocation.
+After writing `research.md`, create the commit `stage2: generate research.md`.
+
+Continue to stage 3 unless the user explicitly asked to stop after stage 2 or after generating `research.md`.
 
 ## Stage 3
 
-Run stage 3 only when the user explicitly mentions `research.md`.
+Run stage 3 when the detected starting stage is stage 3 or when stage 2 just completed and the workflow is continuing.
 
 Require both `prompt.md` and `research.md` to exist. If either file is missing, say exactly which file is missing and stop.
 
@@ -123,11 +135,13 @@ Make `plan.md` detailed enough that stage 4 can execute it without redoing the d
 - edge cases or migration concerns
 - the verification and testing plan
 
-After writing `plan.md`, create the commit `stage3: generate plan.md` and stop. Do not implement code in this invocation.
+After writing `plan.md`, create the commit `stage3: generate plan.md`.
+
+Continue to stage 4 unless the user explicitly asked to stop after stage 3 or after generating `plan.md`.
 
 ## Stage 4
 
-Run stage 4 only when the user explicitly mentions `plan.md`.
+Run stage 4 when the detected starting stage is stage 4 or when stage 3 just completed and the workflow is continuing.
 
 Require `plan.md` to exist. If it is missing, say so and stop.
 
@@ -139,11 +153,13 @@ Follow `plan.md` closely. If implementation reveals a material flaw or contradic
 
 Run the most relevant validation or tests from `plan.md` when feasible. If a planned test cannot be run, say why.
 
-After implementation, create the commit `stage4: implement plan.md` and stop. Do not generate `review.md` in this invocation.
+After implementation, create the commit `stage4: implement plan.md`.
+
+Continue to stage 5 unless the user explicitly asked to stop after stage 4, after implementation, or to skip review.
 
 ## Stage 5
 
-Run stage 5 only when the user explicitly mentions `review.md`.
+Run stage 5 when the detected starting stage is stage 5 or when stage 4 just completed and the workflow is continuing.
 
 Require `plan.md` to exist and require an active `stage4: implement plan.md` commit in the current repository history. If either prerequisite is missing, say so and stop.
 
@@ -169,7 +185,7 @@ After the review loop finishes with no blocking issues remaining, create the com
 
 After each invocation, briefly report:
 
-- which stage ran
+- which stage or stages ran
 - which file was created or updated
 - which commit or revert actions were created
-- what explicit next invocation should mention to continue, if another stage remains
+- whether the workflow reached stage 5 or stopped early because the user explicitly asked it to

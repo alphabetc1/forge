@@ -4,7 +4,7 @@ Turn a fuzzy coding request into shipped, reviewed code.
 
 `prompt.md -> research.md -> plan.md -> build -> review.md`
 
-Forge is a staged skill for Codex and Claude. It pushes a non-trivial coding task through a git-backed workflow that is easy to review, resume, and revert.
+Forge is a staged skill for Codex and Claude. It pushes a non-trivial coding task through a git-backed workflow that runs end to end by default while staying easy to review, resume, and revert.
 
 ## Why Forge
 
@@ -20,7 +20,7 @@ Forge is a staged skill for Codex and Claude. It pushes a non-trivial coding tas
 
 - Developers shipping non-trivial changes with Codex or Claude
 - Teams that want reviewable artifacts before implementation
-- Repositories where resumable, stage-by-stage progress matters
+- Repositories where resumable artifacts and reviewable stage commits matter
 
 ## Not For
 
@@ -32,15 +32,13 @@ Forge is a staged skill for Codex and Claude. It pushes a non-trivial coding tas
 
 1. Install the skill.
 2. Start with a plain-language task.
-3. Resume by mentioning the latest stage file.
-4. End with a review pass that fixes blocking issues before completion.
+3. Resume by mentioning a stage file only when you need to restart from the middle.
+4. Ask it to stop after a stage only when you want an intermediate checkpoint.
 
 ```text
 Codex  : $forge Add CSV and JSON export for invoices
-Codex  : $forge Continue from prompt.md
 Codex  : $forge Continue from research.md
-Codex  : $forge Implement from plan.md
-Codex  : $forge Review from review.md
+Codex  : $forge Continue from research.md but stop after plan.md
 ```
 
 You end up with:
@@ -99,7 +97,9 @@ flowchart LR
 
 Quick read:
 
-- Mention `prompt.md`, `research.md`, `plan.md`, or `review.md` to resume.
+- No stage file mentioned means start at stage 1 and continue through `review.md` by default.
+- Mention `prompt.md`, `research.md`, `plan.md`, or `review.md` to resume from that starting point.
+- Ask to stop after a specific stage only when you want an intermediate checkpoint.
 - Every stage supports revert before continuing.
 - Stage 5 is the only self-loop.
 
@@ -152,9 +152,13 @@ Claude : /forge 帮我实现一个新的导出功能
 | 4 | mention `plan.md` | implementation |
 | 5 | mention `review.md` | `review.md` plus fixes for blocking issues |
 
+These triggers select the starting stage. Forge continues into later stages by default unless the user explicitly asks it to stop early.
+
 Rules that matter:
 
-- Mentioning the file name explicitly is how you resume.
+- Mentioning the file name explicitly selects the starting stage for resume.
+- If you do not add another constraint, Forge continues from that starting stage through stage 5 in one invocation.
+- Ask to stop after `prompt.md`, `research.md`, `plan.md`, or implementation only when you want an intermediate pause.
 - Stages 1-3 only write docs. No implementation before stage 4.
 - Stage 5 loops inside one session until `review.md` says no blocking issues remain.
 - Each stage ends with its own git commit.
@@ -163,10 +167,9 @@ Rules that matter:
 
 ```text
 $forge 帮我设计一个新的权限系统
-$forge 请基于 prompt.md 继续
-$forge 请基于 research.md 继续
-$forge 请基于 plan.md 继续实现
-$forge 请基于 review.md 继续 review
+$forge 请基于 prompt.md 继续到结束
+$forge 请基于 research.md 继续，但只生成 plan.md
+$forge 请基于 plan.md 继续实现并 review 到完成
 ```
 
 ## Promotion Assets
