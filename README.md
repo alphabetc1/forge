@@ -1,16 +1,68 @@
-# 🔥 Forge
+# Forge
 
-Turn a fuzzy request into shipped, reviewed code.
+Turn a fuzzy coding request into shipped, reviewed code.
 
 `prompt.md -> research.md -> plan.md -> build -> review.md`
 
-Forge is a staged skill for **Codex** and **Claude**:
+Forge is a staged skill for Codex and Claude. It pushes a non-trivial coding task through a git-backed workflow that is easy to review, resume, and revert.
 
-- Refine the task before touching code
-- Keep every stage reviewable and revertable with git
-- End with a blocking-issue review loop before calling it done
+## Why Forge
 
-## 🏗️ Architecture
+| Common failure mode with AI coding | What Forge changes |
+| --- | --- |
+| The agent starts coding before the task is clear | Stage 1 rewrites the request into `prompt.md` before any implementation |
+| Research disappears inside chat history | Stage 2 stores repository findings in `research.md` |
+| Plans are vague or skipped | Stage 3 produces an implementation-ready `plan.md` |
+| Rework is hard after requirements change | Each stage is resumable and downstream commits can be reverted safely |
+| Review happens only if the user remembers to ask | Stage 5 forces a blocking-issue review loop before the task is done |
+
+## Who It Is For
+
+- Developers shipping non-trivial changes with Codex or Claude
+- Teams that want reviewable artifacts before implementation
+- Repositories where resumable, stage-by-stage progress matters
+
+## Not For
+
+- One-line edits where a staged workflow would be overkill
+- Repositories without git history
+- Users who want the agent to freestyle instead of following an explicit process
+
+## 30-Second Demo
+
+1. Install the skill.
+2. Start with a plain-language task.
+3. Resume by mentioning the latest stage file.
+4. End with a review pass that fixes blocking issues before completion.
+
+```text
+Codex  : $forge Add CSV and JSON export for invoices
+Codex  : $forge Continue from prompt.md
+Codex  : $forge Continue from research.md
+Codex  : $forge Implement from plan.md
+Codex  : $forge Review from review.md
+```
+
+You end up with:
+
+- `prompt.md`
+- `research.md`
+- `plan.md`
+- implementation changes
+- `review.md`
+- one git commit per stage
+
+## Example Workflows
+
+These examples make the workflow easy to share in docs, release notes, and social posts.
+
+| Example | What it shows | Folder |
+| --- | --- | --- |
+| New export feature | A product-facing feature request that becomes an implementation plan | [`examples/new-export-feature`](examples/new-export-feature) |
+| Auth refactor | A risky internal change that benefits from staged research and review | [`examples/auth-refactor`](examples/auth-refactor) |
+| Webhook bugfix | A debugging task that still needs structure and a final review loop | [`examples/payment-webhook-bugfix`](examples/payment-webhook-bugfix) |
+
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -51,7 +103,7 @@ Quick read:
 - Every stage supports revert before continuing.
 - Stage 5 is the only self-loop.
 
-## ⚡ Install
+## Install
 
 ### macOS / Linux
 
@@ -81,7 +133,7 @@ By default the installer copies the skill into:
 
 Use `--mode link` or `-Mode link` if you want a live symlink during development.
 
-## ▶️ Use
+## Use
 
 Start a new session after installing.
 
@@ -90,7 +142,7 @@ Codex  : $forge 帮我实现一个新的导出功能
 Claude : /forge 帮我实现一个新的导出功能
 ```
 
-## 🧭 Stages
+## Stages
 
 | Stage | Trigger | Output |
 | --- | --- | --- |
@@ -98,7 +150,7 @@ Claude : /forge 帮我实现一个新的导出功能
 | 2 | mention `prompt.md` | `research.md` |
 | 3 | mention `research.md` | `plan.md` |
 | 4 | mention `plan.md` | implementation |
-| 5 | mention `review.md` | `review.md` + fix blocking issues |
+| 5 | mention `review.md` | `review.md` plus fixes for blocking issues |
 
 Rules that matter:
 
@@ -107,7 +159,7 @@ Rules that matter:
 - Stage 5 loops inside one session until `review.md` says no blocking issues remain.
 - Each stage ends with its own git commit.
 
-## 🔁 Resume Examples
+## Resume Examples
 
 ```text
 $forge 帮我设计一个新的权限系统
@@ -117,20 +169,18 @@ $forge 请基于 plan.md 继续实现
 $forge 请基于 review.md 继续 review
 ```
 
-## 🧰 Included
+## Promotion Assets
+
+- [`examples/`](examples) contains shareable case studies you can link in posts and release notes.
+- [`docs/launch.md`](docs/launch.md) contains a launch checklist plus English and Chinese post copy.
+- [`docs/releases/v0.1.0.md`](docs/releases/v0.1.0.md) contains a first release draft you can paste into GitHub Releases.
+
+## Included
 
 - `SKILL.md` - the Forge workflow itself
 - `scripts/revert_stage_commits.py` - revert downstream stage commits safely
 - `agents/openai.yaml` - Codex skill metadata
 
-## ✨ Why It Feels Good
-
-- Clear before clever
-- One stage at a time
-- Easy to review
-- Easy to revert
-- Hard to skip thinking
-
-## 📄 License
+## License
 
 Apache-2.0
