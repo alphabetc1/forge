@@ -13,7 +13,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$SkillName = "teacher"
+$SkillName = "mentor"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $SourceItems = @("SKILL.md", "README.md", "agents", "scripts", "references", "assets")
 
@@ -94,5 +94,5 @@ if ($Target -eq "claude" -or $Target -eq "both") {
 
 Write-Host ""
 Write-Host "Next:"
-Write-Host "  Codex : start a new session, then invoke with `$teacher"
-Write-Host "  Claude: start a new session, then invoke with /teacher"
+Write-Host "  Codex : start a new session, then invoke with `$mentor"
+Write-Host "  Claude: start a new session, then invoke with /mentor"

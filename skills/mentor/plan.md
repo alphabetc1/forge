@@ -1,12 +1,12 @@
 # 问题背景
 
-当前任务是在空白仓库中实现一个可长期复用的 `teacher` skill。这个 skill 不是单次教学 prompt，而是一个跨会话、可持续跟踪学习状态的教学工作流。它需要把学习信息外置到文件系统，用课程图谱而不是平面清单组织内容，用多种 session mode 适配不同学习阶段，并在每次 substantive session 后形成可追踪闭环。
+当前任务是在空白仓库中实现一个可长期复用的 `mentor` skill。这个 skill 不是单次教学 prompt，而是一个跨会话、可持续跟踪学习状态的教学工作流。它需要把学习信息外置到文件系统，用课程图谱而不是平面清单组织内容，用多种 session mode 适配不同学习阶段，并在每次 substantive session 后形成可追踪闭环。
 
 # 当前状态
 
 - 仓库当前已有：
-  - [prompt.md](/root/code/tools/skills/teacher/prompt.md)
-  - [research.md](/root/code/tools/skills/teacher/research.md)
+  - [prompt.md](/root/code/tools/skills/skill-foundry/skills/mentor/prompt.md)
+  - [research.md](/root/code/tools/skills/skill-foundry/skills/mentor/research.md)
 - 仓库当前缺失：
   - `SKILL.md`
   - `references/`
@@ -33,7 +33,7 @@
   - `assets/session-log-template.md`
   - `agents/openai.yaml`
 - 需要 `LLM inference` 的默认课程图，可直接用于面试准备。
-- `agents/openai.yaml` 必须与 skill 内容一致，且 `default_prompt` 显式提到 `$teacher`。
+- `agents/openai.yaml` 必须与 skill 内容一致，且 `default_prompt` 显式提到 `$mentor`。
 - 若加入初始化脚本，需要可运行并做最小验证。
 
 # 选定方案
@@ -53,7 +53,7 @@
 写一个简洁入口文档，包含：
 
 - frontmatter：
-  - `name: teacher`
+  - `name: mentor`
   - `description: ...`
 - 触发场景：
   - 系统化学习
@@ -203,9 +203,9 @@
 
 计划使用 `generate_openai_yaml.py` 生成，避免格式偏差。候选值：
 
-- `display_name`: `Teacher`
+- `display_name`: `Mentor`
 - `short_description`: `Structured learning and interview prep workflows`
-- `default_prompt`: `Use $teacher to run a stateful LLM inference interview prep session.`
+- `default_prompt`: `Use $mentor to run a stateful LLM inference interview prep session.`
 
 # 边界情况与迁移考虑
 
@@ -219,8 +219,8 @@
 
 按以下顺序验证：
 
-1. 运行 `python /root/.codex/skills/.system/skill-creator/scripts/quick_validate.py /root/code/tools/skills/teacher`
-2. 运行 `python /root/.codex/skills/.system/skill-creator/scripts/generate_openai_yaml.py /root/code/tools/skills/teacher --interface display_name=Teacher --interface short_description='Structured learning and interview prep workflows' --interface default_prompt='Use $teacher to run a stateful LLM inference interview prep session.'`
-3. 运行 `python scripts/init_learning_state.py --topic 'LLM inference interview prep' --base-dir /tmp/teacher-skill-check`
-4. 检查 `/tmp/teacher-skill-check/learning/llm-inference-interview-prep/` 下是否生成目标文件
+1. 运行 `python /root/.codex/skills/.system/skill-creator/scripts/quick_validate.py /root/code/tools/skills/skill-foundry/skills/mentor`
+2. 运行 `python /root/.codex/skills/.system/skill-creator/scripts/generate_openai_yaml.py /root/code/tools/skills/skill-foundry/skills/mentor --interface display_name=Mentor --interface short_description='Stateful long-term learning workflows' --interface default_prompt='Use $mentor to run a stateful long-term learning session for a repo or knowledge domain.'`
+3. 运行 `python scripts/init_learning_state.py --topic 'LLM inference interview prep' --base-dir /tmp/mentor-skill-check`
+4. 检查 `/tmp/mentor-skill-check/learning/llm-inference-interview-prep/` 下是否生成目标文件
 5. 如验证通过，确保临时验证产物不纳入 git 提交

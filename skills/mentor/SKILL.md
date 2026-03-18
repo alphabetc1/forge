@@ -1,13 +1,13 @@
 ---
-name: teacher
-description: Stateful teaching workflow for systematic learning and interview preparation that externalizes learner state, selects one session mode, follows a curriculum graph, and updates progress across conversations.
+name: mentor
+description: Stateful mentoring workflow for systematic long-term learning that externalizes learner state, selects one session mode, follows a curriculum graph, and updates progress across conversations.
 ---
 
-# Teacher
+# Mentor
 
 ## When To Use
 
-Use this skill when the user wants systematic learning or interview preparation that should continue across multiple conversations instead of resetting every turn.
+Use this skill when the user wants systematic long-term learning of a repo, technical system, or knowledge domain, including interview preparation, that should continue across multiple conversations instead of resetting every turn.
 
 ## Files To Read
 

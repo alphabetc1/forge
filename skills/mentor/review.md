@@ -1,6 +1,6 @@
 # Review Scope
 
-本轮 review 覆盖了 `teacher` skill 的完整实现，重点检查：
+本轮 review 覆盖了 `mentor` skill 的完整实现，重点检查：
 
 - skill 是否具备“外置状态 + 课程图谱 + 多模式 + 会话闭环”四个核心机制
 - `LLM inference interview prep` 默认课程图是否可直接使用
@@ -10,9 +10,9 @@
 # 已检查内容
 
 - 检查了 `SKILL.md`、`references/`、`assets/`、`scripts/init_learning_state.py`、`agents/openai.yaml`
-- 运行了 `python /root/.codex/skills/.system/skill-creator/scripts/quick_validate.py /root/code/tools/skills/teacher`
-- 运行了 `python scripts/init_learning_state.py --topic 'LLM inference interview prep' --base-dir /tmp/teacher-skill-check --force`
-- 运行了 `python scripts/init_learning_state.py --topic '大模型推理面试准备' --base-dir /tmp/teacher-skill-check-cn --force`
+- 运行了 `python /root/.codex/skills/.system/skill-creator/scripts/quick_validate.py /root/code/tools/skills/skill-foundry/skills/mentor`
+- 运行了 `python scripts/init_learning_state.py --topic 'LLM inference interview prep' --base-dir /tmp/mentor-skill-check --force`
+- 运行了 `python scripts/init_learning_state.py --topic '大模型推理面试准备' --base-dir /tmp/mentor-skill-check-cn --force`
 - 运行了 `python -m py_compile scripts/init_learning_state.py`
 
 # 本轮发现并已修复的 blocking issue
@@ -41,4 +41,4 @@
 
 # 最终状态
 
-无 blocking issue 残留。`teacher` skill 已满足本任务要求，并通过了最相关的结构校验与最小运行验证。
+无 blocking issue 残留。`mentor` skill 已满足本任务要求，并通过了最相关的结构校验与最小运行验证。

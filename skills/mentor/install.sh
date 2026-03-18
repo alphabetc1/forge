@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-SKILL_NAME="teacher"
+SKILL_NAME="mentor"
 MODE="copy"
 TARGET="both"
 CLAUDE_SCOPE="personal"
@@ -12,7 +12,7 @@ SOURCE_ITEMS=("SKILL.md" "README.md" "agents" "scripts" "references" "assets")
 
 usage() {
   cat <<'EOF'
-Install the teacher skill into Codex, Claude, or both.
+Install the mentor skill into Codex, Claude, or both.
 
 Usage:
   ./install.sh [codex|claude|both] [--mode copy|link] [--scope personal|project] [--project-dir PATH]
@@ -151,6 +151,6 @@ fi
 cat <<EOF
 
 Next:
-  Codex : start a new session, then invoke with \$teacher
-  Claude: start a new session, then invoke with /teacher
+  Codex : start a new session, then invoke with \$mentor
+  Claude: start a new session, then invoke with /mentor
 EOF

@@ -54,7 +54,7 @@ def write_file(path: Path, content: str, force: bool) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Initialize external learner state files for the teacher skill.",
+        description="Initialize external learner state files for the mentor skill.",
     )
     parser.add_argument("--topic", required=True, help="Study topic, for example 'LLM inference interview prep'.")
     parser.add_argument("--slug", help="Optional topic slug. Defaults to a slugified topic.")

@@ -16,7 +16,7 @@ Usage:
 
 Examples:
   ./install.sh forge
-  ./install.sh teacher claude --scope project --project-dir /path/to/repo
+  ./install.sh mentor claude --scope project --project-dir /path/to/repo
   ./install.sh all both --mode link
   ./install.sh --list
 EOF

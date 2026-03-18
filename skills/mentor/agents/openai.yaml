@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mentor"
+  short_description: "Stateful long-term learning workflows"
+  default_prompt: "Use $mentor to run a stateful long-term learning session for a repo or knowledge domain."

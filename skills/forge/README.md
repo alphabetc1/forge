@@ -6,6 +6,8 @@ Turn a fuzzy coding request into shipped, reviewed code.
 
 Forge is a staged skill for Codex and Claude. Invoke it explicitly with `$forge` or `/forge` when you want this workflow; it should not auto-trigger just because a task looks like a fit. It pushes a non-trivial coding task through a git-backed workflow that runs end to end by default while staying easy to review, resume, and revert.
 
+In the default path, Forge starts from the user request and runs all the way through stage 5 automatically. The normal user job is to review the final result and decide whether to keep it or revert it, not to babysit each stage.
+
 ## Why Forge
 
 | Common failure mode with AI coding | What Forge changes |
@@ -32,8 +34,9 @@ Forge is a staged skill for Codex and Claude. Invoke it explicitly with `$forge`
 
 1. Install the skill.
 2. Start with a plain-language task.
-3. Resume by mentioning a stage file only when you need to restart from the middle.
-4. Ask it to stop after a stage only when you want an intermediate checkpoint.
+3. Let Forge run to stage 5 by default.
+4. Resume by mentioning a stage file only when you need to restart from the middle.
+5. Ask it to stop after a stage only when you want an intermediate checkpoint.
 
 ```text
 Codex  : $forge Add CSV and JSON export for invoices
@@ -49,6 +52,8 @@ You end up with:
 - implementation changes
 - `review.md`
 - one git commit per stage
+
+In the common case, that is the whole interaction. You review the final output, then either keep it or revert it.
 
 ## Example Workflows
 
@@ -98,6 +103,7 @@ flowchart LR
 Quick read:
 
 - No stage file mentioned means start at stage 1 and continue through `review.md` by default.
+- The default experience is one request in, full stage-5 result out.
 - Mention `prompt.md`, `research.md`, `plan.md`, or `review.md` to resume from that starting point.
 - Ask to stop after a specific stage only when you want an intermediate checkpoint.
 - Every stage supports revert before continuing.
@@ -139,6 +145,8 @@ Start a new session after installing.
 
 Forge is intended for explicit invocation only. Do not rely on the agent inferring Forge from the task shape alone.
 
+Typical usage is simple: give Forge the task once, let it complete stage 5, then review the end state and decide whether to keep or revert it.
+
 ```text
 Codex  : $forge 帮我实现一个新的导出功能
 Claude : /forge 帮我实现一个新的导出功能
@@ -160,6 +168,7 @@ Rules that matter:
 
 - Mentioning the file name explicitly selects the starting stage for resume.
 - If you do not add another constraint, Forge continues from that starting stage through stage 5 in one invocation.
+- If you start from a fresh request, Forge runs from stage 1 through stage 5 without needing explicit step-by-step confirmation.
 - Ask to stop after `prompt.md`, `research.md`, `plan.md`, or implementation only when you want an intermediate pause.
 - Stages 1-3 only write docs. No implementation before stage 4.
 - Stage 5 loops inside one session until `review.md` says no blocking issues remain.
