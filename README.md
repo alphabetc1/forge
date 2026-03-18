@@ -57,6 +57,12 @@ Claude : /mentor 帮我长期学习大模型推理，跟踪我当前进度和下
 - `copy` 适合普通安装，`link` 适合本地开发和迭代 skill
 - `claude --scope project` 会把 skill 安装到目标仓库下的 `.claude/skills/`
 
+## 新增 Skill 文档要求
+
+- 新加的 skill 必须在自己的 `README.md` 中提供完整架构图和流程图。
+- 架构图需要覆盖入口、核心组件、主要文件/脚本和关键外部状态。
+- 流程图需要覆盖主要命令路径，以及 diff / apply / 校验 / 输出这些关键阶段。
+
 ## Skills 详解
 
 ### `claude-codex-sync`

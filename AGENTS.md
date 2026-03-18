@@ -26,6 +26,7 @@ When you add or update a skill in this repository, you must follow these rules:
 1. Update the root `README.md` when a new skill is added.
 2. Add the new skill to the root skills table.
 3. Add a detailed section for the new skill if it is intended to be user-facing.
+4. Every new skill must include a complete architecture diagram and flow diagram in its own `README.md`.
 
 ## Behavior rules for agents
 
