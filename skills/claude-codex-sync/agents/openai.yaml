@@ -1,0 +1,6 @@
+interface:
+  display_name: "Claude Codex Sync"
+  short_description: "Synchronize Claude Code and Codex config, skills, and instructions."
+  default_prompt: "Import Claude config into Codex, or Codex config into Claude, for this user or repository."
+policy:
+  allow_implicit_invocation: false
