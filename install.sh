@@ -9,7 +9,7 @@ TARGET="both"
 
 usage() {
   cat <<'EOF'
-Install one skill or every skill in Skill Foundry.
+Install one skill or every skill in Agent Skills.
 
 Usage:
   ./install.sh [skill|all] [codex|claude|both] [child-installer args...]

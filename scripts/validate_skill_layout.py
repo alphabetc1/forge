@@ -17,7 +17,7 @@ OPTIONAL_FILES = ("install.ps1",)
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Validate that skills in Skill Foundry follow the repository layout rules.",
+        description="Validate that skills in Agent Skills follow the repository layout rules.",
     )
     parser.add_argument(
         "skills",

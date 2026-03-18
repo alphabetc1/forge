@@ -1,6 +1,6 @@
-# Skill Foundry Repo Rules
+# Agent Skills Repo Rules
 
-This repository is a skill monorepo.
+This repository is an agent-skills repository.
 
 When you add or update a skill in this repository, you must follow these rules:
 
